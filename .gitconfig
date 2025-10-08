@@ -1,0 +1,25 @@
+[user]
+	name = erikestr
+	email = erikestrada37@outlook.com
+
+[core]
+	editor = vim
+	autocrlf = input
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = false
+
+[push]
+	default = simple
+
+[color]
+	ui = auto
+
+[diff]
+	tool = vimdiff
+
+[merge]
+	tool = vimdiff
