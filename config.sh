@@ -241,4 +241,35 @@ else
     print_warning "welcome.zsh not found, skipping welcome message configuration..."
 fi
 
+# check for ssh ed25519 key, if not present create one
+if [ ! -f ~/.ssh/id_ed25519 ]
+then
+    print_warning "ssh ed25519 key not found, creating one..."
+    run_command "ssh-keygen -t ed25519 -C \"$(git config --global user.email)\" -f ~/.ssh/id_ed25519 -N \"\""
+    print_info "your public key is:"
+    cat ~/.ssh/id_ed25519.pub
+    print_info "copy it to your clipboard and add it to your github/gitlab/bitbucket account"
+else
+    print_success "ssh ed25519 key already exists"
+fi
+
+# check if ssh-agent is running, if not start it
+if ! pgrep -u "$USER" ssh-agent > /dev/null; 
+then
+    print_warning "ssh-agent is not running, starting it..."
+    run_command "eval \"\$(ssh-agent -s)\""
+else
+    print_success "ssh-agent is already running"
+fi
+
+# check if ssh key is added to ssh-agent, if not add it
+if ! ssh-add -l | grep "id_ed25519" > /dev/null;
+then
+    print_warning "ssh key is not added to ssh-agent, adding it..."
+    run_command "ssh-add ~/.ssh/id_ed25519"
+else
+    print_success "ssh key is already added to ssh-agent"
+fi
+
+# final message
 print_success "setup complete! Please restart your terminal or run 'source ~/.zshrc' to apply changes."
