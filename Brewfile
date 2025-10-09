@@ -11,6 +11,7 @@ brew "nvm"
 
 # Tools
 brew "jq"
+brew "unzip"
 
 # DevOps
 brew "docker"
