@@ -3,80 +3,10 @@
 # config.sh
 # This script sets up a development environment on a fresh Ubuntu installation.
 
-# Colorful terminal output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-MAGENTA='\033[0;35m'
-CYAN='\033[0;36m'
-NC='\033[0m' # No Color
-BOLD='\033[1m'
-UNDERLINE='\033[4m'
-RESET='\033[0m'
-INFO="${BLUE}[INFO]${NC}"
-SUCCESS="${GREEN}[SUCCESS]${NC}"
-WARNING="${YELLOW}[WARNING]${NC}"
-ERROR="${RED}[ERROR]${NC}"
-DRYRUN="${MAGENTA}[DRY-RUN]${NC}"
-RUNNING="${CYAN}[RUNNING]${NC}"
-BOLD_TEXT="${BOLD}BOLD${RESET}"
-UNDERLINE_TEXT="${UNDERLINE}UNDERLINE${RESET}"
-
-# print message functions
-print_info() {
-    echo -e "${INFO} $1"
-}
-
-# print success message
-print_success() {
-    echo -e "${SUCCESS} $1"
-}
-
-# print warning message
-print_warning() {
-    echo -e "${WARNING} $1"
-}
-
-# print question message
-print_question() {
-    echo -e "${CYAN}[QUESTION]${NC} $1"
-}
-
-# print error message
-print_error() {
-    echo -e "${ERROR} $1"
-}
-
-# print bold text
-print_bold() {
-    echo -e "${BOLD} $1 ${RESET}"
-}
-
-# print underlined text
-print_underline() {
-    echo -e "${UNDERLINE}$1${RESET}"
-}
-
-# message of the day
-if [ -f erikestr.txt ]
-then
-    cat erikestr.txt
-fi
-
-# It installs necessary packages, configures zsh with oh-my-zsh, and sets up
-# useful aliases and git configuration.
-# Usage: ./config.sh [--dry-run]
-# The --dry-run option will print the commands that would be executed without
-# actually executing them.
-
-# Check for --dry-run argument
-if [ "$1" == "--dry-run" ]; then
-    DRY_RUN=true
-    print_warning "Running in dry-run mode. No changes will be made."
-else
-    DRY_RUN=false
-fi
+# load scripts from lib/
+source lib/colors.sh
+source lib/messages.sh
+print_success "Scripts loaded successfully"
 
 # safe function to run commands depending on DRY_RUN variable
 run_command() {
@@ -87,6 +17,68 @@ run_command() {
         eval "$1"
     fi
 }
+
+# function to setup .zshrc, backup existing .zshrc if exists with timestamp and 
+# copy new one, then apply changes by sourcing .zshrc
+setup_zshrc() {
+    print_info "setting up .zshrc..."
+    # backup existing .zshrc if exists with timestamp
+    if [ -f ~/.zshrc ]
+    then
+        TIMESTAMP=$(date +%Y%m%d%H%M%S)
+        print_warning "backing up existing .zshrc to .zshrc.bak.$TIMESTAMP"
+        run_command "cp ~/.zshrc ~/.zshrc.bak.$TIMESTAMP"
+    fi
+    run_command "cp .zshrc ~/.zshrc"
+    print_info "applying changes by sourcing .zshrc..."
+    run_command "zsh -ic 'source ~/.zshrc'"
+}
+
+# function to setup aliases, backup existing aliases.zsh if exists with timestamp and 
+# copy new one, then apply changes by sourcing .zshrc
+setup_aliases() {
+    print_info "setting up aliases..."
+    # backup existing aliases.zsh if exists with timestamp
+    if [ -f ~/.oh-my-zsh/custom/aliases.zsh ]
+    then
+        TIMESTAMP=$(date +%Y%m%d%H%M%S)
+        print_warning "backing up existing aliases.zsh to aliases.zsh.bak.$TIMESTAMP"
+        run_command "cp ~/.oh-my-zsh/custom/aliases.zsh ~/.oh-my-zsh/custom/aliases.zsh.bak.$TIMESTAMP"
+    fi
+    run_command "cp aliases.zsh ~/.oh-my-zsh/custom/aliases.zsh"
+    print_info "applying changes by sourcing .zshrc..."
+    run_command "zsh -ic 'source ~/.zshrc'"
+}
+
+# Check for --zshrc-only argument
+if [ "$1" == "--zshrc-only" ];
+then
+    if [ ! -f .zshrc ]; then
+    print_error ".zshrc not found, cannot setup .zshrc."
+    exit 1
+fi
+    setup_zshrc
+    exit 0
+fi
+
+# Check for --aliases-only argument
+if [ "$1" == "--aliases-only" ]; 
+then
+    if [ ! -f aliases.zsh ]; then
+    print_error "aliases.zsh not found, cannot setup aliases."
+    exit 1
+fi
+    setup_aliases
+    exit 0
+fi
+
+# Check for --dry-run argument
+if [ "$1" == "--dry-run" ]; then
+    DRY_RUN=true
+    print_warning "Running in dry-run mode. No changes will be made."
+else
+    DRY_RUN=false
+fi
 
 print_info "starting setup..."
 
@@ -202,15 +194,7 @@ fi
 # configure .zshrc
 if [ -f .zshrc ]
 then
-    print_info "configuring .zshrc..."
-    # backup existing .zshrc if exists with timestamp
-    if [ -f ~/.zshrc ]
-    then
-        TIMESTAMP=$(date +%Y%m%d%H%M%S)
-        print_warning "backing up existing .zshrc to .zshrc.bak.$TIMESTAMP"
-        run_command "cp ~/.zshrc ~/.zshrc.bak.$TIMESTAMP"
-    fi
-    run_command "cp .zshrc ~/.zshrc"
+    setup_zshrc
 else
     print_warning ".zshrc not found, skipping .zshrc configuration..."
 fi
@@ -218,15 +202,7 @@ fi
 # configure aliases.zsh
 if [ -f aliases.zsh ]
 then
-    print_info "configuring aliases.zsh..."
-    # backup existing aliases.zsh if exists with timestamp
-    if [ -f ~/.oh-my-zsh/custom/aliases.zsh ]
-    then
-        TIMESTAMP=$(date +%Y%m%d%H%M%S)
-        print_warning "backing up existing aliases.zsh to aliases.zsh.bak.$TIMESTAMP"
-        run_command "cp ~/.oh-my-zsh/custom/aliases.zsh ~/.oh-my-zsh/custom/aliases.zsh.bak.$TIMESTAMP"
-    fi
-    run_command "cp aliases.zsh ~/.oh-my-zsh/custom/aliases.zsh"
+    setup_aliases
 else
     print_warning "aliases.zsh not found, skipping aliases.zsh configuration..."
 fi
