@@ -6,9 +6,6 @@ brew "zsh-syntax-highlighting"
 # Version control
 brew "git"
 
-# Node.js ecosystem
-brew "nvm"
-
 # Tools
 brew "jq"
 brew "zip"
