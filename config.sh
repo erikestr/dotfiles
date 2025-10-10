@@ -133,6 +133,17 @@ else
     exit 1
 fi
 
+# install sdkman
+if [ ! -d "$HOME/.sdkman" ]
+then
+    print_warning "installing sdkman..."
+    run_command "curl -s \"https://get.sdkman.io\" | bash"
+    print_info "sourcing sdkman..."
+    run_command "source \"$HOME/.sdkman/bin/sdkman-init.sh\""
+else
+    print_success "sdkman is installed"
+fi
+
 # verify zsh installed
 if [ ! command -v zsh ] &> /dev/null
 then
