@@ -18,6 +18,12 @@ run_command() {
     fi
 }
 
+# function to source .zshrc
+source_zshrc() {
+    print_info "sourcing .zshrc..."
+    run_command "source ~/.zshrc"
+}
+
 # function to setup .zshrc, backup existing .zshrc if exists with timestamp and 
 # copy new one, then apply changes by sourcing .zshrc
 setup_zshrc() {
@@ -31,7 +37,7 @@ setup_zshrc() {
     fi
     run_command "cp .zshrc ~/.zshrc"
     print_info "applying changes by sourcing .zshrc..."
-    run_command "zsh -ic 'source ~/.zshrc'"
+    source_zshrc
 }
 
 # function to setup aliases, backup existing aliases.zsh if exists with timestamp and 
@@ -47,7 +53,6 @@ setup_aliases() {
     fi
     run_command "cp aliases.zsh ~/.oh-my-zsh/custom/aliases.zsh"
     print_info "applying changes by sourcing .zshrc..."
-    run_command "zsh -ic 'source ~/.zshrc'"
 }
 
 # Check for --zshrc-only argument
@@ -69,6 +74,7 @@ then
     exit 1
 fi
     setup_aliases
+    source_zshrc
     exit 0
 fi
 
