@@ -1,0 +1,19 @@
+{
+    "java.jdt.ls.java.home": "/home/ale/.sdkman/candidates/java/current",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-25",
+            "path": "/home/ale/.sdkman/candidates/java/25-tem",
+            "default": true
+        }
+    ],
+    "maven.executable.path": "/home/ale/.sdkman/candidates/maven/current/bin/mvn",
+    "maven.terminal.useJavaHome": true,
+    "maven.executable.preferMavenWrapper": true,
+    "maven.terminal.customEnv": [
+        {
+            "environmentVariable": "JAVA_HOME",
+            "value": "/home/ale/.sdkman/candidates/java/current"
+        }
+    ]
+}
