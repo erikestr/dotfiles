@@ -259,7 +259,7 @@ else
 fi
 
 # install java 25 if not installed
-if ! sdk list java | grep "25-tem" | grep -q "installed"; 
+if ! command -v java &> /dev/null
 then
     print_warning "java 25 is not installed, installing it..."
     run_command "sdk install java 25-tem"
@@ -268,7 +268,7 @@ else
 fi
 
 # install maven if not installed
-if ! sdk list maven | grep -q "installed"; 
+if ! command -v mvn &> /dev/null
 then
     print_warning "maven is not installed, installing it..."
     run_command "sdk install maven"
