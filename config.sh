@@ -186,9 +186,17 @@ else
     print_success "oh-my-zsh is already installed"
 fi
 
-# configure .gitconfig
-if [ -f .gitconfig ]
+# install nvm if not installed
+if [ ! -d "$HOME/.nvm" ]
 then
+    print_warning "installing nvm..."
+    run_command 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash'
+else
+    print_success "nvm is installed"
+fi
+
+# configure .gitconfig if --copy is passed as argument
+if [ -f .gitconfig ] && [ "$1" == "--copy" ]; then
     print_info "configuring .gitconfig..."
     # backup existing .gitconfig if exists with timestamp
     if [ -f ~/.gitconfig ]
@@ -198,34 +206,39 @@ then
         run_command "cp ~/.gitconfig ~/.gitconfig.bak.$TIMESTAMP"
     fi
     run_command "cp .gitconfig ~/.gitconfig"
-else
+elif [ "$1" == "--copy" ]; then
     print_warning ".gitconfig not found, skipping .gitconfig configuration..."
+else
+    print_info "skipping .gitconfig configuration..."
 fi
 
-# configure .zshrc
-if [ -f .zshrc ]
-then
+# configure .zshrc if --copy is passed as argument
+if [ -f .zshrc ] && [ "$1" == "--copy" ]; then
     setup_zshrc
-else
+elif [ "$1" == "--copy" ]; then
     print_warning ".zshrc not found, skipping .zshrc configuration..."
-fi
-
-# configure aliases.zsh
-if [ -f aliases.zsh ]
-then
-    setup_aliases
 else
-    print_warning "aliases.zsh not found, skipping aliases.zsh configuration..."
+    print_info "skipping .zshrc configuration..."
 fi
 
-# configure welcome message
-if [ -f welcome.zsh ]
-then
+# configure aliases.zsh if --copy is passed as argument
+if [ -f aliases.zsh ] && [ "$1" == "--copy" ]; then
+    setup_aliases
+elif [ "$1" == "--copy" ]; then
+    print_warning "aliases.zsh not found, skipping aliases.zsh configuration..."
+else
+    print_info "skipping aliases.zsh configuration..."
+fi
+
+# configure welcome message if --copy is passed as argument
+if [ -f welcome.zsh ] && [ "$1" == "--copy" ]; then
     print_info "configuring welcome message..."
     run_command "cp erikestr.txt ~/erikestr.txt"
     run_command "cp welcome.zsh ~/.oh-my-zsh/custom/welcome.zsh"
-else
+elif [ "$1" == "--copy" ]; then
     print_warning "welcome.zsh not found, skipping welcome message configuration..."
+else
+    print_info "skipping welcome message configuration..."
 fi
 
 # check for ssh ed25519 key, if not present create one
