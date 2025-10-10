@@ -21,7 +21,7 @@ run_command() {
 # function to source .zshrc
 source_zshrc() {
     print_info "sourcing .zshrc..."
-    run_command "source ~/.zshrc"
+    run_command "zsh -c 'source ~/.zshrc'"
 }
 
 # function to setup .zshrc, backup existing .zshrc if exists with timestamp and 
