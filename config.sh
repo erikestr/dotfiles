@@ -218,15 +218,6 @@ else
     print_info "skipping .gitconfig configuration..."
 fi
 
-# configure .zshrc if --copy is passed as argument
-if [ -f .zshrc ] && [ "$1" == "--copy" ]; then
-    setup_zshrc
-elif [ "$1" == "--copy" ]; then
-    print_warning ".zshrc not found, skipping .zshrc configuration..."
-else
-    print_info "skipping .zshrc configuration..."
-fi
-
 # configure aliases.zsh if --copy is passed as argument
 if [ -f aliases.zsh ] && [ "$1" == "--copy" ]; then
     setup_aliases
@@ -245,6 +236,15 @@ elif [ "$1" == "--copy" ]; then
     print_warning "welcome.zsh not found, skipping welcome message configuration..."
 else
     print_info "skipping welcome message configuration..."
+fi
+
+# configure .zshrc if --copy is passed as argument
+if [ -f .zshrc ] && [ "$1" == "--copy" ]; then
+    setup_zshrc
+elif [ "$1" == "--copy" ]; then
+    print_warning ".zshrc not found, skipping .zshrc configuration..."
+else
+    print_info "skipping .zshrc configuration..."
 fi
 
 # check for ssh ed25519 key, if not present create one
