@@ -258,5 +258,23 @@ else
     print_success "ssh key is already added to ssh-agent"
 fi
 
+# install java 25 if not installed
+if ! sdk list java | grep "25-tem" | grep -q "installed"; 
+then
+    print_warning "java 25 is not installed, installing it..."
+    run_command "sdk install java 25-tem"
+else
+    print_success "java 25 is already installed"
+fi
+
+# install maven if not installed
+if ! sdk list maven | grep -q "installed"; 
+then
+    print_warning "maven is not installed, installing it..."
+    run_command "sdk install maven"
+else
+    print_success "maven is already installed"
+fi
+
 # final message
 print_success "setup complete! Please restart your terminal or run 'source ~/.zshrc' to apply changes."
