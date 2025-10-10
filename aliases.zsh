@@ -19,6 +19,10 @@ alias ll='ls -lah'
 alias ls='ls --color=auto'
 alias v='nvim'
 
+# system
+alias update='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
+alias reload='source ~/.zshrc'
+
 # git
 alias gs='git status'
 alias ga='git add'
