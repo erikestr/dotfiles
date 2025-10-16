@@ -55,6 +55,20 @@ setup_aliases() {
     print_info "applying changes by sourcing .zshrc..."
 }
 
+# Check if --help is passed as argument
+if [ "$1" == "--help" ];
+then
+    echo "Usage: ./config.sh [options]"
+    echo ""
+    echo "Options:"
+    echo "  --help              Show this help message and exit"
+    echo "  --copy              Copy .gitconfig, .zshrc, aliases.zsh, and welcome.zsh to home directory"
+    echo "  --zshrc-only       Only setup .zshrc"
+    echo "  --aliases-only      Only setup aliases.zsh"
+    echo "  --dry-run           Show commands that would be run without executing them"
+    exit 0
+fi
+
 # Check for --zshrc-only argument
 if [ "$1" == "--zshrc-only" ];
 then
