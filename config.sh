@@ -215,6 +215,21 @@ else
     print_success "nvm is installed"
 fi
 
+# configure .gitignore_global to home directory
+if [ -f .gitignore_global ]; then
+    print_info "configuring .gitignore_global..."
+    # backup existing .gitignore_global if exists with timestamp
+     if [ -f ~/.gitignore_global ]
+     then
+        TIMESTAMP=$(date +%Y%m%d%H%M%S)
+        print_warning "backing up existing .gitignore_global to .gitignore_global.bak.$TIMESTAMP"
+        run_command "cp ~/.gitignore_global ~/.gitignore_global.bak.$TIMESTAMP"
+    fi
+    run_command "cp .gitignore_global ~/.gitignore_global"
+else
+    print_warning ".gitignore_global not found, skipping .gitignore_global configuration..."
+fi
+
 # configure .gitconfig if --copy is passed as argument
 if [ -f .gitconfig ] && [ "$1" == "--copy" ]; then
     print_info "configuring .gitconfig..."
