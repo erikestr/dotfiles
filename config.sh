@@ -324,5 +324,14 @@ else
     print_success "maven is already installed"
 fi
 
+# if nvm is installed, install latest lts node
+if [ -d "$HOME/.nvm" ]
+then
+    print_warning "installing latest lts node..."
+    run_command "nvm install --lts"
+else
+    print_error "nvm is not installed, cannot install node."
+fi
+
 # final message
 print_success "setup complete! Please restart your terminal or run 'source ~/.zshrc' to apply changes."
